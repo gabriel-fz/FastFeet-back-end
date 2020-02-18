@@ -14,9 +14,12 @@ routes.post('/sessions', SessionController.store);
 // middleware de autenticação do administrador
 routes.use(authMiddleware);
 
+// listagem de administradores
+routes.get('/user', UserController.store);
+
 // cadastro de recipients
 routes.post('/recipients', RecipientController.store);
-// listagem de administradores
-routes.post('/user', UserController.store);
+// atualização de recipients
+routes.put('/recipients/:id', RecipientController.update);
 
 export default routes;
