@@ -11,6 +11,7 @@ import DeliveryController from './app/controllers/DeliveryController';
 import DeliveryStatusController from './app/controllers/DeliveryStatusController';
 
 import authMiddleware from './app/middlewares/auth';
+import authDeliveryman from './app/middlewares/authDeliveryman';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -19,7 +20,24 @@ const upload = multer(multerConfig);
 routes.post('/sessions', SessionController.store);
 
 // listagem de deliveries
-routes.get('/deliveyman/:id/deliveries', DeliveryStatusController.index);
+routes.get(
+  '/deliveyman/:id/deliveries',
+  authDeliveryman,
+  DeliveryStatusController.index
+);
+// upload de signature
+routes.post(
+  '/deliveyman/:id/signature',
+  upload.single('file'),
+  authDeliveryman,
+  FileController.store
+);
+// update de deliveries
+routes.put(
+  '/deliveyman/:id/deliveries/:deliveryid',
+  authDeliveryman,
+  DeliveryStatusController.update
+);
 
 // middleware de autenticação do administrador
 routes.use(authMiddleware);
