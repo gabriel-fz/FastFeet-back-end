@@ -8,6 +8,7 @@ import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
+import DeliveryStatusController from './app/controllers/DeliveryStatusController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -16,6 +17,9 @@ const upload = multer(multerConfig);
 
 // login de administrador
 routes.post('/sessions', SessionController.store);
+
+// listagem de deliveries
+routes.get('/deliveyman/:id/deliveries', DeliveryStatusController.index);
 
 // middleware de autenticação do administrador
 routes.use(authMiddleware);
