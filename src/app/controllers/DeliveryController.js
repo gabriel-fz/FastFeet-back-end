@@ -3,7 +3,8 @@ import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 
-import Mail from '../../lib/Mail';
+import RegisterMail from '../jobs/RegisterMail';
+import Queue from '../../lib/Queue';
 
 class DeliveryController {
   async index(req, res) {
@@ -46,18 +47,10 @@ class DeliveryController {
     });
 
     // envio de email
-    await Mail.sendMail({
-      to: `${deliverymanExists.name} <${deliverymanExists.email}>`,
-      subject: 'Nova entrega',
-      template: 'register',
-      context: {
-        deliveryman: deliverymanExists.name,
-        recipient: recipientExists.name,
-        address: recipientExists.address,
-        address_number: recipientExists.address_number,
-        complement: recipientExists.complement,
-        product,
-      },
+    await Queue.add(RegisterMail.key, {
+      deliverymanExists,
+      recipientExists,
+      product,
     });
 
     return res.json(delivery);
