@@ -3,6 +3,8 @@ import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 
+import Mail from '../../lib/Mail';
+
 class DeliveryController {
   async index(req, res) {
     const deliveries = await Delivery.findAll({
@@ -41,6 +43,13 @@ class DeliveryController {
       recipient_id,
       deliveryman_id,
       product,
+    });
+
+    // envio de email
+    await Mail.sendMail({
+      to: `${deliverymanExists.name} <${deliverymanExists.email}>`,
+      subject: 'Nova entrega',
+      text: 'Você tem uma nova entrega',
     });
 
     return res.json(delivery);
@@ -83,13 +92,19 @@ class DeliveryController {
   }
 
   async delete(req, res) {
-    const deliveryExists = await Delivery.findByPk(req.params.id);
+    const delivery = await Delivery.findByPk(req.params.id);
 
-    if (!deliveryExists) {
+    if (!delivery) {
       return res.status(400).json({ error: 'Delivery not found.' });
     }
 
-    await Delivery.destroy({ where: { id: req.params.id } });
+    if (delivery.start_date) {
+      return res.status(401).json({ error: 'Impossible to cancel delivery' });
+    }
+
+    delivery.canceled_at = new Date();
+
+    await delivery.save();
 
     return res.json({ ok: true });
   }
