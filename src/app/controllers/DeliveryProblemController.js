@@ -8,7 +8,18 @@ import Deliveryman from '../models/Deliveryman';
 
 class DeliveryProblemController {
   async index(req, res) {
-    return res.json({ ok: true });
+    const problems = await DeliveryProblem.findAll({
+      where: {
+        delivery_id: req.params.id,
+      },
+      order: ['id'],
+    });
+
+    if (!problems) {
+      return res.status(400).json({ error: 'No problems with delivery' });
+    }
+
+    return res.json(problems);
   }
 
   async store(req, res) {

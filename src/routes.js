@@ -75,6 +75,8 @@ routes.put('/deliveries/:id', DeliveryController.update);
 // exclusão de deliveries
 routes.delete('/deliveries/:id', DeliveryController.delete);
 
+// lista de problemas de uma delivery
+routes.get('/delivery/:id/problems', DeliveryProblemController.index);
 // cancelamento de deliveries
 routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
 
