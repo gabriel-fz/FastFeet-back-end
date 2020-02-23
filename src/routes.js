@@ -9,6 +9,7 @@ import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliveryStatusController from './app/controllers/DeliveryStatusController';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 import authDeliveryman from './app/middlewares/authDeliveryman';
@@ -38,6 +39,9 @@ routes.put(
   authDeliveryman,
   DeliveryStatusController.update
 );
+
+// cadastro de problemas de deliveries
+routes.post('/deliveyman/:id/problems', DeliveryProblemController.store);
 
 // middleware de autenticação do administrador
 routes.use(authMiddleware);
@@ -70,5 +74,8 @@ routes.get('/deliveries', DeliveryController.index);
 routes.put('/deliveries/:id', DeliveryController.update);
 // exclusão de deliveries
 routes.delete('/deliveries/:id', DeliveryController.delete);
+
+// cancelamento de deliveries
+routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
 
 export default routes;
