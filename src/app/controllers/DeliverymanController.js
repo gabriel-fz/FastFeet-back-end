@@ -1,13 +1,49 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
+    const nameDeliveryman = req.query.name
+      ? {
+          name: {
+            [Op.iLike]: `%${req.query.name}%`,
+          },
+        }
+      : {};
+
     const deliverymans = await Deliveryman.findAll({
       order: ['name'],
+      where: nameDeliveryman,
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
     });
 
     return res.json(deliverymans);
+  }
+
+  async show(req, res) {
+    const deliveryman = await Deliveryman.findByPk(req.params.id, {
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+
+    if (!deliveryman) {
+      return res.status(400).json({ error: 'deliveryman not found.' });
+    }
+
+    return res.json(deliveryman);
   }
 
   async store(req, res) {

@@ -51,8 +51,14 @@ routes.get('/user', UserController.index);
 
 // cadastro de recipients
 routes.post('/recipients', RecipientController.store);
+// listagem de recipients
+routes.get('/recipients', RecipientController.index);
+// listagem de um recipient
+routes.get('/recipients/:id', RecipientController.show);
 // atualização de recipients
 routes.put('/recipients/:id', RecipientController.update);
+// exclusão de recipients
+routes.delete('/recipients/:id', RecipientController.delete);
 
 // upload de arquivos
 routes.post('/files', upload.single('file'), FileController.store);
@@ -60,7 +66,9 @@ routes.post('/files', upload.single('file'), FileController.store);
 // cadastro de deliverymans
 routes.post('/deliverymans', DeliverymanController.store);
 // listagem de deliverymans
-routes.get('/deliverymans/', DeliverymanController.index);
+routes.get('/deliverymans', DeliverymanController.index);
+// listagem de um deliveryman
+routes.get('/deliverymans/:id', DeliverymanController.show);
 // atualização de deliverymans
 routes.put('/deliverymans/:id', DeliverymanController.update);
 // exclusão de deliverymans
@@ -70,11 +78,15 @@ routes.delete('/deliverymans/:id', DeliverymanController.delete);
 routes.post('/deliveries', DeliveryController.store);
 // listagem de deliveries
 routes.get('/deliveries', DeliveryController.index);
+// listagem de um delivery
+routes.get('/deliveries/:id', DeliveryController.show);
 // atualização de deliveries
 routes.put('/deliveries/:id', DeliveryController.update);
 // exclusão de deliveries
 routes.delete('/deliveries/:id', DeliveryController.delete);
 
+// lista de deliveries com problemas
+routes.get('/delivery/problems', DeliveryProblemController.show);
 // lista de problemas de uma delivery
 routes.get('/delivery/:id/problems', DeliveryProblemController.index);
 // cancelamento de deliveries

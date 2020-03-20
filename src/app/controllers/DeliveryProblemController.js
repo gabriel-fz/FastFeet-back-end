@@ -22,6 +22,34 @@ class DeliveryProblemController {
     return res.json(problems);
   }
 
+  async show(req, res) {
+    /**
+    const problems = await DeliveryProblem.aggregate(
+      'delivery_id',
+      'distinct',
+      {
+        plain: false,
+      }
+    );
+
+    const idsProblem = problems.map(p => p.distinct);
+     */
+
+    const deliveriesProblem = await DeliveryProblem.findAll({
+      order: ['id'],
+      attributes: ['id', 'description'],
+      include: [
+        {
+          model: Delivery,
+          as: 'delivery',
+          attributes: ['canceled_at'],
+        },
+      ],
+    });
+
+    return res.json(deliveriesProblem);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       description: Yup.string().required(),

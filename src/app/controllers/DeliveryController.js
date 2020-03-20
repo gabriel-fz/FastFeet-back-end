@@ -1,18 +1,64 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 import RegisterMail from '../jobs/RegisterMail';
 import Queue from '../../lib/Queue';
 
 class DeliveryController {
   async index(req, res) {
+    const nameProduct = req.query.name
+      ? {
+          product: {
+            [Op.iLike]: `%${req.query.name}%`,
+          },
+        }
+      : {};
+
     const deliveries = await Delivery.findAll({
       order: ['id'],
+      where: nameProduct,
+      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'address',
+            'address_number',
+            'complement',
+            'city',
+            'state',
+            'zip_code',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name'],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
     });
 
     return res.json(deliveries);
+  }
+
+  async show(req, res) {
+    const delivery = await Delivery.findByPk(req.params.id, {
+      attributes: ['recipient_id', 'deliveryman_id', 'product'],
+    });
+
+    return res.json(delivery);
   }
 
   async store(req, res) {
@@ -93,19 +139,13 @@ class DeliveryController {
   }
 
   async delete(req, res) {
-    const delivery = await Delivery.findByPk(req.params.id);
+    const deliveryExists = await Delivery.findByPk(req.params.id);
 
-    if (!delivery) {
+    if (!deliveryExists) {
       return res.status(400).json({ error: 'Delivery not found.' });
     }
 
-    if (delivery.start_date) {
-      return res.status(401).json({ error: 'Impossible to cancel delivery' });
-    }
-
-    delivery.canceled_at = new Date();
-
-    await delivery.save();
+    await Delivery.destroy({ where: { id: req.params.id } });
 
     return res.json({ ok: true });
   }
