@@ -22,26 +22,38 @@ routes.post('/sessions', SessionController.store);
 
 // listagem de deliveries
 routes.get(
-  '/deliveyman/:id/deliveries',
+  '/deliveryman/:id/deliveries',
   authDeliveryman,
   DeliveryStatusController.index
 );
+
+// listagem de retiradas do deliveryman no dia
+routes.get(
+  '/deliveryman/:id/withdraw',
+  authDeliveryman,
+  DeliveryStatusController.show
+);
+
 // upload de signature
 routes.post(
-  '/deliveyman/:id/signature',
+  '/deliveryman/:id/signature',
   upload.single('file'),
   authDeliveryman,
   FileController.store
 );
 // update de deliveries
 routes.put(
-  '/deliveyman/:id/deliveries/:deliveryid',
+  '/deliveryman/:id/deliveries/:deliveryid',
   authDeliveryman,
   DeliveryStatusController.update
 );
 
 // cadastro de problemas de deliveries
-routes.post('/deliveyman/:id/problems', DeliveryProblemController.store);
+routes.post('/deliveryman/:id/problems', DeliveryProblemController.store);
+// listagem de um deliveryman
+routes.get('/deliverymans/:id', DeliverymanController.show);
+// lista de problemas de uma delivery
+routes.get('/delivery/:id/problems', DeliveryProblemController.index);
 
 // middleware de autenticação do administrador
 routes.use(authMiddleware);
@@ -67,8 +79,6 @@ routes.post('/files', upload.single('file'), FileController.store);
 routes.post('/deliverymans', DeliverymanController.store);
 // listagem de deliverymans
 routes.get('/deliverymans', DeliverymanController.index);
-// listagem de um deliveryman
-routes.get('/deliverymans/:id', DeliverymanController.show);
 // atualização de deliverymans
 routes.put('/deliverymans/:id', DeliverymanController.update);
 // exclusão de deliverymans
@@ -87,8 +97,6 @@ routes.delete('/deliveries/:id', DeliveryController.delete);
 
 // lista de deliveries com problemas
 routes.get('/delivery/problems', DeliveryProblemController.show);
-// lista de problemas de uma delivery
-routes.get('/delivery/:id/problems', DeliveryProblemController.index);
 // cancelamento de deliveries
 routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
 
