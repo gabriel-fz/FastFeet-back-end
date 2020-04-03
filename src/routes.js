@@ -55,11 +55,11 @@ routes.get('/deliverymans/:id', DeliverymanController.show);
 // lista de problemas de uma delivery
 routes.get('/delivery/:id/problems', DeliveryProblemController.index);
 
-// middleware de autenticação do administrador
-routes.use(authMiddleware);
-
 // listagem de administradores
 routes.get('/user', UserController.index);
+
+// middleware de autenticação do administrador
+routes.use(authMiddleware);
 
 // cadastro de recipients
 routes.post('/recipients', RecipientController.store);
