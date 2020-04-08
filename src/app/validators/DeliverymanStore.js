@@ -4,6 +4,8 @@ import Deliveryman from '../models/Deliveryman';
 
 export default async (req, res, next) => {
   try {
+    // Schema validation:
+
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       avatar_id: Yup.number(),
@@ -14,6 +16,8 @@ export default async (req, res, next) => {
 
     await schema.validate(req.body, { abortEarly: false });
 
+    // Validações extras:
+
     const { email } = req.body;
 
     const deliverymanExists = await Deliveryman.findOne({
@@ -23,11 +27,11 @@ export default async (req, res, next) => {
     });
 
     if (deliverymanExists) {
-      return res.status(400).json({ error: 'Deliveryman exists' });
+      throw new Error('Deliveryman exists');
     }
 
     return next();
   } catch (err) {
-    return res.status(400).json({ error: 'Validation fails' });
+    return res.status(400).json({ error: err.message });
   }
 };
