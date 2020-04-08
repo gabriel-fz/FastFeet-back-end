@@ -4,6 +4,7 @@ import Recipient from '../models/Recipient';
 
 export default async (req, res, next) => {
   try {
+    // Schema validation:
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       address: Yup.string().required(),
@@ -19,8 +20,7 @@ export default async (req, res, next) => {
 
     await schema.validate(req.body, { abortEarly: false });
 
-    //-------
-
+    // Validações extras:
     const data = req.body;
 
     const recipientExists = await Recipient.findOne({
@@ -28,11 +28,11 @@ export default async (req, res, next) => {
     });
 
     if (recipientExists) {
-      return res.status(400).json({ error: 'Recipient exists' });
+      throw new Error('Recipient exists');
     }
 
     return next();
   } catch (err) {
-    return res.status(400).json({ error: 'Validation fails' });
+    return res.status(400).json({ error: err.message });
   }
 };

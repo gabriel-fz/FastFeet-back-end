@@ -5,7 +5,6 @@ import Deliveryman from '../models/Deliveryman';
 export default async (req, res, next) => {
   try {
     // Schema validation:
-
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       avatar_id: Yup.number(),
@@ -17,7 +16,6 @@ export default async (req, res, next) => {
     await schema.validate(req.body, { abortEarly: false });
 
     // Validações extras:
-
     const { email } = req.body;
 
     const deliverymanExists = await Deliveryman.findOne({

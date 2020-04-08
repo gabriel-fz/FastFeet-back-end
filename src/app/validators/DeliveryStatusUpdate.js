@@ -6,6 +6,7 @@ import Delivery from '../models/Delivery';
 
 export default async (req, res, next) => {
   try {
+    // Schema validation:
     const schema = Yup.object().shape({
       start_date: Yup.date(),
       end_date: Yup.date(),
@@ -14,13 +15,16 @@ export default async (req, res, next) => {
 
     await schema.validate(req.body, { abortEarly: false });
 
-    //-------
-
+    // Validações extras:
     const { start_date, end_date, signature_id } = req.body;
 
     // verificando se há o signatura_id junto com o end_date
     if (end_date && !signature_id) {
-      return res.status(400).json({ error: 'Inform the signature_id.' });
+      throw new Error('Inform the signature_id.');
+    }
+
+    if (!end_date && signature_id) {
+      throw new Error('Inform the end_date.');
     }
 
     if (start_date) {
@@ -39,21 +43,19 @@ export default async (req, res, next) => {
 
       // verificando se o entregador já fez 5 retiradas no dia
       if (deliveriesCont.length > 4) {
-        return res
-          .status(400)
-          .json({ error: 'You have reached the limit of daily deliveries.' });
+        throw new Error('You have reached the limit of daily deliveries.');
       }
 
       const time = format(parsedDate, 'HH:mm');
 
       // varificando se a retirada está dentro do horário comercial
       if (time < startDay || time > endDay) {
-        return res.status(400).json({ error: 'Invalid time' });
+        throw new Error('Invalid time');
       }
     }
 
     return next();
   } catch (err) {
-    return res.status(400).json({ error: 'Validation fails' });
+    return res.status(400).json({ error: err.message });
   }
 };
