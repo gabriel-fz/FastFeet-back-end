@@ -4,16 +4,6 @@ import Delivery from '../models/Delivery';
 
 class RecipientController {
   async store(req, res) {
-    const data = req.body;
-
-    const recipientExists = await Recipient.findOne({
-      where: data,
-    });
-
-    if (recipientExists) {
-      return res.status(400).json({ error: 'Recipient exists' });
-    }
-
     const recipient = await Recipient.create(req.body);
 
     return res.json(recipient);

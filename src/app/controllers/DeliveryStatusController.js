@@ -70,7 +70,6 @@ class DeliveryStatusController {
 
   async show(req, res) {
     // caso o deliveryman queira ver quantas entregas pode fazer
-
     const date = new Date();
 
     const deliveriesThisDay = await Delivery.findAll({

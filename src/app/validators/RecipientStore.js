@@ -1,5 +1,7 @@
 import * as Yup from 'yup';
 
+import Recipient from '../models/Recipient';
+
 export default async (req, res, next) => {
   try {
     const schema = Yup.object().shape({
@@ -16,6 +18,18 @@ export default async (req, res, next) => {
     });
 
     await schema.validate(req.body, { abortEarly: false });
+
+    //-------
+
+    const data = req.body;
+
+    const recipientExists = await Recipient.findOne({
+      where: data,
+    });
+
+    if (recipientExists) {
+      return res.status(400).json({ error: 'Recipient exists' });
+    }
 
     return next();
   } catch (err) {
