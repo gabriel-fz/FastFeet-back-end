@@ -47,6 +47,18 @@ class DeliverymanController {
   }
 
   async store(req, res) {
+    const { email } = req.body;
+
+    const deliverymanExists = await Deliveryman.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (deliverymanExists) {
+      return res.status(400).json({ error: 'Deu erro aqui ó' });
+    }
+
     const deliveryman = await Deliveryman.create(req.body);
 
     return res.json(deliveryman);
