@@ -6,8 +6,8 @@ import UserController from './app/controllers/UserController';
 import RecipientController from './app/controllers/RecipientController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
-import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
+import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryStatusController from './app/controllers/DeliveryStatusController';
 import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
@@ -32,28 +32,28 @@ routes.post('/sessions', validateSessionStore, SessionController.store);
 
 // listagem de deliveries
 routes.get(
-  '/deliveryman/:id/deliveries',
+  '/deliveryman/:deliverymanid/deliveries',
   authDeliveryman,
   DeliveryStatusController.index
 );
 
 // listagem de retiradas do deliveryman no dia
 routes.get(
-  '/deliveryman/:id/withdraw',
+  '/deliveryman/:deliverymanid/withdraw',
   authDeliveryman,
   DeliveryStatusController.show
 );
 
 // upload de signature
 routes.post(
-  '/deliveryman/:id/signature',
+  '/deliveryman/:deliverymanid/signature',
   upload.single('file'),
   authDeliveryman,
   FileController.store
 );
 // update de deliveries
 routes.put(
-  '/deliveryman/:id/deliveries/:deliveryid',
+  '/deliveryman/:deliverymanid/deliveries/:deliveryid',
   authDeliveryman,
   validateDeliveryStatusUpdate,
   DeliveryStatusController.update
@@ -61,14 +61,14 @@ routes.put(
 
 // cadastro de problemas de deliveries
 routes.post(
-  '/deliveryman/:id/problems',
+  '/deliveryman/:deliveryid/problems',
   validateDeliveryProblemStore,
   DeliveryProblemController.store
 );
 // listagem de um deliveryman
-routes.get('/deliverymans/:id', DeliverymanController.show);
+routes.get('/deliverymans/:deliverymanid', DeliverymanController.show);
 // lista de problemas de uma delivery
-routes.get('/delivery/:id/problems', DeliveryProblemController.index);
+routes.get('/delivery/:deliveryid/problems', DeliveryProblemController.index);
 
 // listagem de administradores
 routes.get('/user', UserController.index);
@@ -81,15 +81,15 @@ routes.post('/recipients', validateRecipientStore, RecipientController.store);
 // listagem de recipients
 routes.get('/recipients', RecipientController.index);
 // listagem de um recipient
-routes.get('/recipients/:id', RecipientController.show);
+routes.get('/recipients/:recipientid', RecipientController.show);
 // atualização de recipients
 routes.put(
-  '/recipients/:id',
+  '/recipients/:recipientid',
   validateRecipientUpdate,
   RecipientController.update
 );
 // exclusão de recipients
-routes.delete('/recipients/:id', RecipientController.delete);
+routes.delete('/recipients/:recipientid', RecipientController.delete);
 
 // upload de arquivos
 routes.post('/files', upload.single('file'), FileController.store);
@@ -104,31 +104,34 @@ routes.post(
 routes.get('/deliverymans', DeliverymanController.index);
 // atualização de deliverymans
 routes.put(
-  '/deliverymans/:id',
+  '/deliverymans/:deliverymanid',
   validateDeliverymanUpdate,
   DeliverymanController.update
 );
 // exclusão de deliverymans
-routes.delete('/deliverymans/:id', DeliverymanController.delete);
+routes.delete('/deliverymans/:deliverymanid', DeliverymanController.delete);
 
 // cadastro de deliveries
 routes.post('/deliveries', validateDeliveryStore, DeliveryController.store);
 // listagem de deliveries
 routes.get('/deliveries', DeliveryController.index);
 // listagem de um delivery
-routes.get('/deliveries/:id', DeliveryController.show);
+routes.get('/deliveries/:deliveryid', DeliveryController.show);
 // atualização de deliveries
 routes.put(
-  '/deliveries/:id',
+  '/deliveries/:deliveryid',
   validateDeliveryUpdate,
   DeliveryController.update
 );
 // exclusão de deliveries
-routes.delete('/deliveries/:id', DeliveryController.delete);
+routes.delete('/deliveries/:deliveryid', DeliveryController.delete);
 
 // lista de deliveries com problemas
 routes.get('/delivery/problems', DeliveryProblemController.show);
 // cancelamento de deliveries
-routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
+routes.delete(
+  '/problem/:problemid/cancel-delivery',
+  DeliveryProblemController.delete
+);
 
 export default routes;

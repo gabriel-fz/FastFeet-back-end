@@ -53,7 +53,7 @@ class DeliveryController {
   }
 
   async show(req, res) {
-    const delivery = await Delivery.findByPk(req.params.id, {
+    const delivery = await Delivery.findByPk(req.params.deliveryid, {
       attributes: ['recipient_id', 'deliveryman_id', 'product'],
     });
 
@@ -106,7 +106,7 @@ class DeliveryController {
       return res.status(400).json({ error: 'Deliveryman not found.' });
     }
 
-    const delivery = await Delivery.findByPk(req.params.id);
+    const delivery = await Delivery.findByPk(req.params.deliveryid);
 
     if (!delivery) {
       return res.status(400).json({ error: 'Delivery not found.' });
@@ -118,13 +118,13 @@ class DeliveryController {
   }
 
   async delete(req, res) {
-    const deliveryExists = await Delivery.findByPk(req.params.id);
+    const deliveryExists = await Delivery.findByPk(req.params.deliveryid);
 
     if (!deliveryExists) {
       return res.status(400).json({ error: 'Delivery not found.' });
     }
 
-    await Delivery.destroy({ where: { id: req.params.id } });
+    await Delivery.destroy({ where: { id: req.params.deliveryid } });
 
     return res.json({ ok: true });
   }

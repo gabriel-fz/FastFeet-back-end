@@ -9,7 +9,7 @@ class DeliveryProblemController {
   async index(req, res) {
     const problems = await DeliveryProblem.findAll({
       where: {
-        delivery_id: req.params.id,
+        delivery_id: req.params.deliveryid,
       },
       order: ['id'],
     });
@@ -53,7 +53,7 @@ class DeliveryProblemController {
   }
 
   async store(req, res) {
-    const delivery_id = req.params.id;
+    const delivery_id = req.params.deliveryid;
     const { description } = req.body;
 
     const delivery = await Delivery.findByPk(delivery_id);
@@ -71,22 +71,25 @@ class DeliveryProblemController {
   }
 
   async delete(req, res) {
-    const deliveryProblem = await DeliveryProblem.findByPk(req.params.id, {
-      include: [
-        {
-          model: Delivery,
-          as: 'delivery',
-          attributes: ['id', 'canceled_at'],
-          include: [
-            {
-              model: Deliveryman,
-              as: 'deliveryman',
-              attributes: ['name', 'email'],
-            },
-          ],
-        },
-      ],
-    });
+    const deliveryProblem = await DeliveryProblem.findByPk(
+      req.params.problemid,
+      {
+        include: [
+          {
+            model: Delivery,
+            as: 'delivery',
+            attributes: ['id', 'canceled_at'],
+            include: [
+              {
+                model: Deliveryman,
+                as: 'deliveryman',
+                attributes: ['name', 'email'],
+              },
+            ],
+          },
+        ],
+      }
+    );
 
     if (!deliveryProblem) {
       return res.status(400).json({ error: 'Delivery problem not found.' });

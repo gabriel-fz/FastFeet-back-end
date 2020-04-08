@@ -28,7 +28,7 @@ class DeliverymanController {
   }
 
   async show(req, res) {
-    const deliveryman = await Deliveryman.findByPk(req.params.id, {
+    const deliveryman = await Deliveryman.findByPk(req.params.deliverymanid, {
       attributes: ['id', 'name', 'email', 'created_at'],
       include: [
         {
@@ -65,7 +65,7 @@ class DeliverymanController {
   }
 
   async update(req, res) {
-    const deliveryman = await Deliveryman.findByPk(req.params.id);
+    const deliveryman = await Deliveryman.findByPk(req.params.deliverymanid);
 
     if (!deliveryman) {
       return res.status(400).json({ error: 'Deliveryman not found.' });
@@ -77,13 +77,15 @@ class DeliverymanController {
   }
 
   async delete(req, res) {
-    const deliverymanExists = await Deliveryman.findByPk(req.params.id);
+    const deliverymanExists = await Deliveryman.findByPk(
+      req.params.deliverymanid
+    );
 
     if (!deliverymanExists) {
       return res.status(400).json({ error: 'Deliveryman not found.' });
     }
 
-    await Deliveryman.destroy({ where: { id: req.params.id } });
+    await Deliveryman.destroy({ where: { id: req.params.deliverymanid } });
 
     return res.json({ ok: true });
   }

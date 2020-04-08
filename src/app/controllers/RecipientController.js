@@ -37,7 +37,7 @@ class RecipientController {
   }
 
   async show(req, res) {
-    const recipient = await Recipient.findByPk(req.params.id, {
+    const recipient = await Recipient.findByPk(req.params.recipientid, {
       attributes: [
         'name',
         'address',
@@ -57,7 +57,7 @@ class RecipientController {
   }
 
   async update(req, res) {
-    const recipientExists = await Recipient.findByPk(req.params.id);
+    const recipientExists = await Recipient.findByPk(req.params.recipientid);
 
     if (!recipientExists) {
       return res.status(400).json({ error: 'Recipient not found.' });
@@ -69,7 +69,7 @@ class RecipientController {
   }
 
   async delete(req, res) {
-    const recipientExists = await Recipient.findByPk(req.params.id);
+    const recipientExists = await Recipient.findByPk(req.params.recipientid);
 
     if (!recipientExists) {
       return res.status(400).json({ error: 'Recipient not found.' });
@@ -77,7 +77,7 @@ class RecipientController {
 
     const hasDelivery = await Delivery.findOne({
       where: {
-        recipient_id: req.params.id,
+        recipient_id: req.params.recipientid,
       },
     });
 
@@ -87,7 +87,7 @@ class RecipientController {
         .json({ error: 'Recipient has a delivery to receive.' });
     }
 
-    await Recipient.destroy({ where: { id: req.params.id } });
+    await Recipient.destroy({ where: { id: req.params.recipientid } });
 
     return res.json({ ok: true });
   }

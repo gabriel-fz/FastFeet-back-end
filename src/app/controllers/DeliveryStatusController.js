@@ -10,7 +10,7 @@ class DeliveryStatusController {
     if (req.query.completed === 'false') {
       const deliveries = await Delivery.findAll({
         where: {
-          deliveryman_id: req.params.id,
+          deliveryman_id: req.params.deliverymanid,
           canceled_at: null,
           end_date: null,
         },
@@ -39,7 +39,7 @@ class DeliveryStatusController {
     if (req.query.completed === 'true') {
       const deliveries = await Delivery.findAll({
         where: {
-          deliveryman_id: req.params.id,
+          deliveryman_id: req.params.deliverymanid,
           end_date: {
             [Op.ne]: null,
           },
@@ -75,7 +75,7 @@ class DeliveryStatusController {
 
     const deliveriesThisDay = await Delivery.findAll({
       where: {
-        deliveryman_id: req.params.id,
+        deliveryman_id: req.params.deliverymanid,
         start_date: {
           [Op.between]: [startOfDay(date), endOfDay(date)],
         },
@@ -91,7 +91,7 @@ class DeliveryStatusController {
     const delivery = await Delivery.findOne({
       where: {
         id: req.params.deliveryid,
-        deliveryman_id: req.params.id,
+        deliveryman_id: req.params.deliverymanid,
       },
     });
 
@@ -122,7 +122,7 @@ class DeliveryStatusController {
 
       const deliveriesCont = await Delivery.findAll({
         where: {
-          deliveryman_id: req.params.id,
+          deliveryman_id: req.params.deliverymanid,
           start_date: {
             [Op.between]: [startOfDay(parsedDate), endOfDay(parsedDate)],
           },
