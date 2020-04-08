@@ -56,7 +56,7 @@ class DeliverymanController {
     });
 
     if (deliverymanExists) {
-      return res.status(400).json({ error: 'Deu erro aqui ó' });
+      return res.status(400).json({ error: 'Deliveryman exists' });
     }
 
     const deliveryman = await Deliveryman.create(req.body);
