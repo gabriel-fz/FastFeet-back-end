@@ -57,24 +57,18 @@ class RecipientController {
   }
 
   async update(req, res) {
-    const recipientExists = await Recipient.findByPk(req.params.recipientid);
+    const recipient = await Recipient.findByPk(req.params.recipientid);
 
-    if (!recipientExists) {
+    if (!recipient) {
       return res.status(400).json({ error: 'Recipient not found.' });
     }
 
-    const newRecipient = await recipientExists.update(req.body);
+    const newRecipient = await recipient.update(req.body);
 
     return res.json(newRecipient);
   }
 
   async delete(req, res) {
-    const recipientExists = await Recipient.findByPk(req.params.recipientid);
-
-    if (!recipientExists) {
-      return res.status(400).json({ error: 'Recipient not found.' });
-    }
-
     const hasDelivery = await Delivery.findOne({
       where: {
         recipient_id: req.params.recipientid,

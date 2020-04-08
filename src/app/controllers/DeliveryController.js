@@ -57,6 +57,10 @@ class DeliveryController {
       attributes: ['recipient_id', 'deliveryman_id', 'product'],
     });
 
+    if (!delivery) {
+      return res.status(401).json({ error: 'Delivery not found.' });
+    }
+
     return res.json(delivery);
   }
 
@@ -92,20 +96,6 @@ class DeliveryController {
   }
 
   async update(req, res) {
-    const { recipient_id, deliveryman_id } = req.body;
-
-    const recipientExists = await Recipient.findByPk(recipient_id);
-
-    if (recipient_id && !recipientExists) {
-      return res.status(400).json({ error: 'Recipient not found.' });
-    }
-
-    const deliverymanExists = await Deliveryman.findByPk(deliveryman_id);
-
-    if (deliveryman_id && !deliverymanExists) {
-      return res.status(400).json({ error: 'Deliveryman not found.' });
-    }
-
     const delivery = await Delivery.findByPk(req.params.deliveryid);
 
     if (!delivery) {
@@ -118,12 +108,6 @@ class DeliveryController {
   }
 
   async delete(req, res) {
-    const deliveryExists = await Delivery.findByPk(req.params.deliveryid);
-
-    if (!deliveryExists) {
-      return res.status(400).json({ error: 'Delivery not found.' });
-    }
-
     await Delivery.destroy({ where: { id: req.params.deliveryid } });
 
     return res.json({ ok: true });

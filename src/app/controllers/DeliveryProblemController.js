@@ -22,18 +22,6 @@ class DeliveryProblemController {
   }
 
   async show(req, res) {
-    /**
-    const problems = await DeliveryProblem.aggregate(
-      'delivery_id',
-      'distinct',
-      {
-        plain: false,
-      }
-    );
-
-    const idsProblem = problems.map(p => p.distinct);
-     */
-
     const deliveriesProblem = await DeliveryProblem.findAll({
       order: ['id'],
       attributes: ['id', 'description'],
@@ -55,12 +43,6 @@ class DeliveryProblemController {
   async store(req, res) {
     const delivery_id = req.params.deliveryid;
     const { description } = req.body;
-
-    const delivery = await Delivery.findByPk(delivery_id);
-
-    if (!delivery) {
-      return res.status(400).json({ error: 'Delivery not found.' });
-    }
 
     const deliveryProblem = await DeliveryProblem.create({
       delivery_id,

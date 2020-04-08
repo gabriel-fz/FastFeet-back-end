@@ -40,25 +40,13 @@ class DeliverymanController {
     });
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'deliveryman not found.' });
+      return res.status(401).json({ error: 'Deliveryman not found.' });
     }
 
     return res.json(deliveryman);
   }
 
   async store(req, res) {
-    const { email } = req.body;
-
-    const deliverymanExists = await Deliveryman.findOne({
-      where: {
-        email,
-      },
-    });
-
-    if (deliverymanExists) {
-      return res.status(400).json({ error: 'Deliveryman exists' });
-    }
-
     const deliveryman = await Deliveryman.create(req.body);
 
     return res.json(deliveryman);
@@ -77,14 +65,6 @@ class DeliverymanController {
   }
 
   async delete(req, res) {
-    const deliverymanExists = await Deliveryman.findByPk(
-      req.params.deliverymanid
-    );
-
-    if (!deliverymanExists) {
-      return res.status(400).json({ error: 'Deliveryman not found.' });
-    }
-
     await Deliveryman.destroy({ where: { id: req.params.deliverymanid } });
 
     return res.json({ ok: true });

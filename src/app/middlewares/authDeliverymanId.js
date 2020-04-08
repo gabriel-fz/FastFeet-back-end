@@ -10,7 +10,7 @@ export default async (req, res, next) => {
   const deliveryman = await Deliveryman.findByPk(deliverymanid);
 
   if (!deliveryman) {
-    return res.status(401).json({ error: 'Deliveryman no exists' });
+    return res.status(401).json({ error: 'Deliveryman not found.' });
   }
 
   return next();

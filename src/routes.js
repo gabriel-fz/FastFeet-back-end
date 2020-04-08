@@ -22,7 +22,9 @@ import validateRecipientStore from './app/validators/RecipientStore';
 import validateRecipientUpdate from './app/validators/RecipientUpdate';
 
 import authMiddleware from './app/middlewares/auth';
-import authDeliveryman from './app/middlewares/authDeliveryman';
+import authDeliveryId from './app/middlewares/authDeliveryId';
+import authDeliverymanId from './app/middlewares/authDeliverymanId';
+import authRecipientId from './app/middlewares/authRecipientId';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -33,14 +35,14 @@ routes.post('/sessions', validateSessionStore, SessionController.store);
 // listagem de deliveries
 routes.get(
   '/deliveryman/:deliverymanid/deliveries',
-  authDeliveryman,
+  authDeliverymanId,
   DeliveryStatusController.index
 );
 
 // listagem de retiradas do deliveryman no dia
 routes.get(
   '/deliveryman/:deliverymanid/withdraw',
-  authDeliveryman,
+  authDeliverymanId,
   DeliveryStatusController.show
 );
 
@@ -48,13 +50,12 @@ routes.get(
 routes.post(
   '/deliveryman/:deliverymanid/signature',
   upload.single('file'),
-  authDeliveryman,
+  authDeliverymanId,
   FileController.store
 );
-// update de deliveries
+// update de status deliveries
 routes.put(
   '/deliveryman/:deliverymanid/deliveries/:deliveryid',
-  authDeliveryman,
   validateDeliveryStatusUpdate,
   DeliveryStatusController.update
 );
@@ -62,13 +63,18 @@ routes.put(
 // cadastro de problemas de deliveries
 routes.post(
   '/deliveryman/:deliveryid/problems',
+  authDeliveryId,
   validateDeliveryProblemStore,
   DeliveryProblemController.store
 );
 // listagem de um deliveryman
 routes.get('/deliverymans/:deliverymanid', DeliverymanController.show);
 // lista de problemas de uma delivery
-routes.get('/delivery/:deliveryid/problems', DeliveryProblemController.index);
+routes.get(
+  '/delivery/:deliveryid/problems',
+  authDeliveryId,
+  DeliveryProblemController.index
+);
 
 // listagem de administradores
 routes.get('/user', UserController.index);
@@ -89,7 +95,11 @@ routes.put(
   RecipientController.update
 );
 // exclusão de recipients
-routes.delete('/recipients/:recipientid', RecipientController.delete);
+routes.delete(
+  '/recipients/:recipientid',
+  authRecipientId,
+  RecipientController.delete
+);
 
 // upload de arquivos
 routes.post('/files', upload.single('file'), FileController.store);
@@ -109,7 +119,11 @@ routes.put(
   DeliverymanController.update
 );
 // exclusão de deliverymans
-routes.delete('/deliverymans/:deliverymanid', DeliverymanController.delete);
+routes.delete(
+  '/deliverymans/:deliverymanid',
+  authDeliverymanId,
+  DeliverymanController.delete
+);
 
 // cadastro de deliveries
 routes.post('/deliveries', validateDeliveryStore, DeliveryController.store);
@@ -124,7 +138,11 @@ routes.put(
   DeliveryController.update
 );
 // exclusão de deliveries
-routes.delete('/deliveries/:deliveryid', DeliveryController.delete);
+routes.delete(
+  '/deliveries/:deliveryid',
+  authDeliveryId,
+  DeliveryController.delete
+);
 
 // lista de deliveries com problemas
 routes.get('/delivery/problems', DeliveryProblemController.show);
