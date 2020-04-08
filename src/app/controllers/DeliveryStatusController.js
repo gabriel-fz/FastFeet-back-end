@@ -1,5 +1,4 @@
 import { startOfDay, endOfDay, parseISO, format } from 'date-fns';
-import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
 import Recipient from '../models/Recipient';
@@ -87,16 +86,6 @@ class DeliveryStatusController {
   }
 
   async update(req, res) {
-    const schema = Yup.object().shape({
-      start_date: Yup.date(),
-      end_date: Yup.date(),
-      signature_id: Yup.number(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
     const { start_date, end_date, signature_id } = req.body;
     // req.params.deliveryid
     const delivery = await Delivery.findOne({

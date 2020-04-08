@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { Op } from 'sequelize';
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
@@ -62,16 +61,6 @@ class DeliveryController {
   }
 
   async store(req, res) {
-    const schema = Yup.object().shape({
-      recipient_id: Yup.number().required(),
-      deliveryman_id: Yup.number().required(),
-      product: Yup.string().required(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
     const { recipient_id, deliveryman_id, product } = req.body;
 
     const recipientExists = await Recipient.findByPk(recipient_id);
@@ -103,16 +92,6 @@ class DeliveryController {
   }
 
   async update(req, res) {
-    const schema = Yup.object().shape({
-      recipient_id: Yup.number(),
-      deliveryman_id: Yup.number(),
-      product: Yup.string(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
     const { recipient_id, deliveryman_id } = req.body;
 
     const recipientExists = await Recipient.findByPk(recipient_id);
