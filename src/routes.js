@@ -29,9 +29,6 @@ import authRecipientId from './app/middlewares/authRecipientId';
 const routes = new Router();
 const upload = multer(multerConfig);
 
-// login de administrador
-routes.post('/sessions', validateSessionStore, SessionController.store);
-
 // listagem de deliveries
 routes.get(
   '/deliveryman/:deliverymanid/deliveries',
@@ -67,8 +64,10 @@ routes.post(
   validateDeliveryProblemStore,
   DeliveryProblemController.store
 );
+
 // listagem de um deliveryman
 routes.get('/deliverymans/:deliverymanid', DeliverymanController.show);
+
 // lista de problemas de uma delivery
 routes.get(
   '/delivery/:deliveryid/problems',
@@ -79,7 +78,10 @@ routes.get(
 // listagem de administradores
 routes.get('/user', UserController.index);
 
-// middleware de autenticação do administrador
+// login de administrador
+routes.post('/sessions', validateSessionStore, SessionController.store);
+
+// middleware de autenticação do administrador ------------------------------
 routes.use(authMiddleware);
 
 // cadastro de recipients

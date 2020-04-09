@@ -6,6 +6,22 @@ import Delivery from '../models/Delivery';
 
 class DeliveryStatusController {
   async index(req, res) {
+    // padrão de include para as requisições
+    const includeDefault = {
+      model: Recipient,
+      as: 'recipient',
+      attributes: [
+        'id',
+        'name',
+        'address',
+        'address_number',
+        'complement',
+        'state',
+        'city',
+        'zip_code',
+      ],
+    };
+
     // caso o deliveryman queira ver todos os deliveries para entregar
     if (req.query.completed === 'false') {
       const deliveries = await Delivery.findAll({
@@ -14,22 +30,7 @@ class DeliveryStatusController {
           canceled_at: null,
           end_date: null,
         },
-        include: [
-          {
-            model: Recipient,
-            as: 'recipient',
-            attributes: [
-              'id',
-              'name',
-              'address',
-              'address_number',
-              'complement',
-              'state',
-              'city',
-              'zip_code',
-            ],
-          },
-        ],
+        include: [includeDefault],
       });
 
       return res.json(deliveries);
@@ -44,27 +45,13 @@ class DeliveryStatusController {
             [Op.ne]: null,
           },
         },
-        include: [
-          {
-            model: Recipient,
-            as: 'recipient',
-            attributes: [
-              'id',
-              'name',
-              'address',
-              'address_number',
-              'complement',
-              'state',
-              'city',
-              'zip_code',
-            ],
-          },
-        ],
+        include: [includeDefault],
       });
 
       return res.json(deliveries);
     }
 
+    // erro caso o req.query.completed não seja true e nem false
     return res.status(400).json({ error: 'invalid status' });
   }
 
@@ -86,7 +73,7 @@ class DeliveryStatusController {
 
   async update(req, res) {
     const { start_date, end_date } = req.body;
-    // req.params.deliveryid
+
     const delivery = await Delivery.findOne({
       where: {
         id: req.params.deliveryid,
