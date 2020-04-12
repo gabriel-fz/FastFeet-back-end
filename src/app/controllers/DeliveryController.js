@@ -9,10 +9,12 @@ import Queue from '../../lib/Queue';
 
 class DeliveryController {
   async index(req, res) {
-    const nameProduct = req.query.name
+    const { name, page = 1 } = req.query;
+
+    const nameProduct = name
       ? {
           product: {
-            [Op.iLike]: `%${req.query.name}%`,
+            [Op.iLike]: `%${name}%`,
           },
         }
       : {};
@@ -21,6 +23,8 @@ class DeliveryController {
       order: ['id'],
       where: nameProduct,
       attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: Recipient,

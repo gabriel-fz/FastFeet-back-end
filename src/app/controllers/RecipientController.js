@@ -10,10 +10,11 @@ class RecipientController {
   }
 
   async index(req, res) {
-    const nameRecipient = req.query.name
+    const { name, page = 1 } = req.query;
+    const nameRecipient = name
       ? {
           name: {
-            [Op.iLike]: `%${req.query.name}%`,
+            [Op.iLike]: `%${name}%`,
           },
         }
       : {};
@@ -21,6 +22,8 @@ class RecipientController {
     const recipients = await Recipient.findAll({
       order: ['name'],
       where: nameRecipient,
+      limit: 10,
+      offset: (page - 1) * 10,
     });
 
     return res.json(recipients);

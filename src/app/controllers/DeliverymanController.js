@@ -4,10 +4,11 @@ import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const nameDeliveryman = req.query.name
+    const { name, page = 1 } = req.query;
+    const nameDeliveryman = name
       ? {
           name: {
-            [Op.iLike]: `%${req.query.name}%`,
+            [Op.iLike]: `%${name}%`,
           },
         }
       : {};
@@ -15,6 +16,8 @@ class DeliverymanController {
     const deliverymans = await Deliveryman.findAll({
       order: ['name'],
       where: nameDeliveryman,
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: File,

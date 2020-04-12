@@ -22,9 +22,12 @@ class DeliveryProblemController {
   }
 
   async show(req, res) {
+    const { page = 1 } = req.query;
     const deliveriesProblem = await DeliveryProblem.findAll({
       order: ['id'],
       attributes: ['id', 'description'],
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: Delivery,
