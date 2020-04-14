@@ -83,22 +83,24 @@ class DeliveryStatusController {
 
     // verificando se a entrega existe
     if (!delivery) {
-      return res.status(400).json({ error: 'Delivery not founds.' });
+      return res.status(404).json({ error: 'Delivery not founds.' });
     }
 
     // verificando se a entrega já foi cancelada
     if (delivery.canceled_at) {
-      return res.status(400).json({ error: 'Delivery canceled.' });
+      return res.status(401).json({ error: 'Delivery canceled.' });
     }
 
     // verificando se a entrega já foi retirada
     if (start_date && delivery.start_date) {
-      return res.status(400).json({ error: 'Delivery withdrawn.' });
+      return res.status(401).json({ error: 'Delivery withdrawn.' });
     }
 
     // verificando se a entrega já foi concluida
     if (end_date && delivery.end_date) {
-      return res.status(400).json({ error: 'Delivery withdrawn.' });
+      return res
+        .status(401)
+        .json({ error: 'Delivery has already been completed.' });
     }
 
     const deliveryUpdate = await delivery.update(req.body);

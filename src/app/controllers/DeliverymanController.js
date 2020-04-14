@@ -43,7 +43,7 @@ class DeliverymanController {
     });
 
     if (!deliveryman) {
-      return res.status(401).json({ error: 'Deliveryman not found.' });
+      return res.status(404).json({ error: 'Deliveryman not found.' });
     }
 
     return res.json(deliveryman);
@@ -59,7 +59,7 @@ class DeliverymanController {
     const deliveryman = await Deliveryman.findByPk(req.params.deliverymanid);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'Deliveryman not found.' });
+      return res.status(404).json({ error: 'Deliveryman not found.' });
     }
 
     const deliverymanUpdate = await deliveryman.update(req.body);

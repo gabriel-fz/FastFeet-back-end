@@ -15,7 +15,7 @@ class DeliveryProblemController {
     });
 
     if (!problems) {
-      return res.status(400).json({ error: 'No problems with delivery' });
+      return res.status(404).json({ error: 'No problems with delivery' });
     }
 
     return res.json(problems);
@@ -77,11 +77,11 @@ class DeliveryProblemController {
     );
 
     if (!deliveryProblem) {
-      return res.status(400).json({ error: 'Delivery problem not found.' });
+      return res.status(404).json({ error: 'Delivery problem not found.' });
     }
 
     if (deliveryProblem.delivery.canceled_at) {
-      return res.status(400).json({ error: 'Delivery is already canceled.' });
+      return res.status(401).json({ error: 'Delivery is already canceled.' });
     }
 
     deliveryProblem.delivery.canceled_at = new Date();

@@ -43,7 +43,7 @@ class RecipientController {
     });
 
     if (!recipient) {
-      return res.status(400).json({ error: 'Recipient not found.' });
+      return res.status(404).json({ error: 'Recipient not found.' });
     }
 
     return res.json(recipient);
@@ -53,7 +53,7 @@ class RecipientController {
     const recipient = await Recipient.findByPk(req.params.recipientid);
 
     if (!recipient) {
-      return res.status(400).json({ error: 'Recipient not found.' });
+      return res.status(404).json({ error: 'Recipient not found.' });
     }
 
     const newRecipient = await recipient.update(req.body);

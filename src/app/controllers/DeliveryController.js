@@ -62,7 +62,7 @@ class DeliveryController {
     });
 
     if (!delivery) {
-      return res.status(401).json({ error: 'Delivery not found.' });
+      return res.status(404).json({ error: 'Delivery not found.' });
     }
 
     return res.json(delivery);
@@ -74,13 +74,13 @@ class DeliveryController {
     const recipientExists = await Recipient.findByPk(recipient_id);
 
     if (!recipientExists) {
-      return res.status(400).json({ error: 'Recipient not found.' });
+      return res.status(404).json({ error: 'Recipient not found.' });
     }
 
     const deliverymanExists = await Deliveryman.findByPk(deliveryman_id);
 
     if (!deliverymanExists) {
-      return res.status(400).json({ error: 'Deliveryman not found.' });
+      return res.status(404).json({ error: 'Deliveryman not found.' });
     }
 
     const delivery = await Delivery.create({
@@ -103,7 +103,7 @@ class DeliveryController {
     const delivery = await Delivery.findByPk(req.params.deliveryid);
 
     if (!delivery) {
-      return res.status(400).json({ error: 'Delivery not found.' });
+      return res.status(404).json({ error: 'Delivery not found.' });
     }
 
     await delivery.update(req.body);
